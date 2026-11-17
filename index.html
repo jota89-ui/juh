@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Joelma">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <title>JoelmaPocahontas — seu treino, no seu tempo</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f5f4ef;
+      --card: #fffefa;
+      --ink: #20231f;
+      --muted: #81847d;
+      --line: #e8e7df;
+      --accent: #ffd2a1;
+      --accent-strong: #b86a21;
+      --orange: #e9825b;
+      --shadow: 0 12px 36px rgba(37, 42, 30, .055);
+      --soft: #f1f0e9;
+      --soft-text: #73766e;
+      --idle-text: #777a73;
+      --today-bg: #fff6eb;
+      --today-border: #f0bd7f;
+      --date-text: #696c65;
+      --avatar-bg: #e7d8c8;
+      --avatar-ink: #654b3f;
+      --check-bg: #fff;
+      --check-border: #d5d7cf;
+      --button-shadow: 0 3px 0 rgba(160, 94, 37, .28), 0 6px 12px rgba(48, 34, 24, .1);
+      --page-overlay: rgba(245, 244, 239, .76);
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --paper: #171a17;
+      --card: #20251f;
+      --ink: #edf0e7;
+      --muted: #a3a99b;
+      --line: #343b32;
+      --accent-strong: #ffc178;
+      --shadow: 0 12px 36px rgba(0, 0, 0, .24);
+      --soft: #2b3128;
+      --soft-text: #c2c8ba;
+      --idle-text: #b0b6aa;
+      --today-bg: #3b2e20;
+      --today-border: #b87a39;
+      --date-text: #c4c9bd;
+      --avatar-bg: #423c35;
+      --avatar-ink: #eed3bd;
+      --check-bg: #252a23;
+      --check-border: #52594f;
+      --button-shadow: 0 3px 0 rgba(0, 0, 0, .4), 0 6px 12px rgba(0, 0, 0, .22);
+      --page-overlay: rgba(23, 26, 23, .82);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: var(--paper);
+      background-image: linear-gradient(var(--page-overlay), var(--page-overlay)), url("images/gym-background.jpg");
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+      color: var(--ink);
+      font: 15px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button { font: inherit; transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease; }
+    .shell { max-width: 1240px; margin: auto; padding: 28px 40px 48px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-size: 19px; font-weight: 800; letter-spacing: -.7px; }
+    .brand-mark { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 12px; background: var(--accent); font-size: 19px; }
+    .header-right { display: flex; align-items: center; gap: 18px; color: var(--muted); font-size: 13px; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--avatar-bg); color: var(--avatar-ink); font-weight: 750; }
+    .theme-toggle { display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 8px 11px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: var(--ink); font-size: 12px; font-weight: 650; cursor: pointer; box-shadow: var(--button-shadow); }
+    .theme-toggle:hover { transform: translateY(-2px); background: transparent; }
+    .layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 34px; }
+    aside { padding-top: 9px; }
+    .nav-label { margin: 0 0 12px 12px; color: var(--muted); font-size: 10px; font-weight: 750; letter-spacing: 1.4px; text-transform: uppercase; }
+    .nav { display: grid; gap: 5px; }
+    .nav button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 12px; border: 0; border-radius: 12px; background: transparent; color: var(--idle-text); text-align: left; cursor: pointer; }
+    .nav button.active { border: 1px solid var(--accent-strong); background: transparent; color: var(--accent-strong); font-weight: 700; box-shadow: var(--button-shadow); }
+    .nav-icon { width: 20px; font-size: 17px; text-align: center; }
+    .side-note { margin-top: 38px; padding: 17px; border: 1px solid var(--line); border-radius: 16px; color: var(--muted); font-size: 12px; }
+    .side-note strong { display: block; margin-bottom: 5px; color: var(--ink); font-size: 13px; }
+    .app-credit { margin-top: 20px; color: var(--muted); font-size: 10px; text-align: right; }
+    .app-credit a { color: inherit; }
+    main { min-width: 0; }
+    .greeting { display: flex; align-items: flex-end; justify-content: space-between; margin: 0 0 24px; }
+    .eyebrow { margin: 0 0 5px; color: var(--muted); font-size: 13px; }
+    h1 { margin: 0; font-size: clamp(27px, 3vw, 36px); line-height: 1.12; letter-spacing: -1.5px; }
+    .date-pill { padding: 9px 13px; border: 1px solid var(--line); border-radius: 999px; color: var(--date-text); font-size: 12px; white-space: nowrap; }
+    .hero { display: grid; grid-template-columns: 1.25fr .75fr; gap: 18px; margin-bottom: 19px; }
+    .today-card { position: relative; overflow: hidden; min-height: 225px; padding: 27px 29px; border-radius: 22px; background: #222820; color: white; }
+    .today-card::after { content: ""; position: absolute; width: 230px; height: 230px; right: -49px; bottom: -96px; border: 1px solid rgba(255,210,161,.21); border-radius: 50%; box-shadow: 0 0 0 24px rgba(255,210,161,.035), 0 0 0 48px rgba(255,210,161,.035); }
+    .today-kicker { color: #c5c9bf; font-size: 12px; }
+    .today-card h2 { margin: 13px 0 8px; font-size: 26px; letter-spacing: -.8px; }
+    .today-meta { color: #b6bbb1; font-size: 13px; }
+    .today-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 16px; margin-top: 23px; }
+    .primary { position: relative; z-index: 1; min-height: 44px; padding: 11px 16px; border: 1px solid var(--accent-strong); border-radius: 11px; background: transparent; color: var(--ink); font-weight: 750; cursor: pointer; box-shadow: var(--button-shadow); }
+    .today-card .primary { flex-shrink: 0; border-color: var(--accent); color: #fff; white-space: nowrap; }
+    .primary:hover { transform: translateY(-2px); background: transparent; }
+    .exercise-count { color: #c5c9bf; font-size: 12px; }
+    .stats { display: grid; grid-template-rows: 1fr 1fr; gap: 15px; }
+    .stat-card { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); }
+    .stat-label { color: var(--muted); font-size: 12px; }
+    .stat-value { display: block; margin-top: 4px; font-size: 23px; font-weight: 780; letter-spacing: -.8px; }
+    .stat-icon { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 13px; background: var(--soft); font-size: 18px; }
+    .section-heading { display: flex; align-items: center; justify-content: space-between; margin: 28px 0 13px; }
+    .section-heading h2 { margin: 0; font-size: 17px; letter-spacing: -.35px; }
+    .section-heading button { padding: 0; border: 0; background: transparent; color: var(--idle-text); font-size: 12px; cursor: pointer; }
+    .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 9px; }
+    .day { min-height: 82px; padding: 12px 8px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); text-align: center; }
+    .day-name { color: var(--muted); font-size: 11px; }
+    .day-num { margin: 4px 0; font-size: 16px; font-weight: 700; }
+    .day-mark { width: 5px; height: 5px; margin: auto; border-radius: 50%; background: transparent; }
+    .day.has-workout .day-mark { background: var(--orange); }
+    .day.is-today { border-color: var(--today-border); background: var(--today-bg); }
+    .workouts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
+    .workout-card { padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); cursor: pointer; transition: transform .15s, box-shadow .15s; }
+    .workout-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .workout-top { display: flex; justify-content: space-between; align-items: center; }
+    .workout-badge { padding: 5px 8px; border-radius: 8px; background: var(--soft); color: var(--soft-text); font-size: 10px; font-weight: 700; }
+    .workout-card h3 { margin: 13px 0 4px; font-size: 15px; }
+    .workout-card p { margin: 0; color: var(--muted); font-size: 11px; }
+    .workout-arrow { color: var(--muted); }
+    .panel { padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: var(--card); }
+    .panel-head { display:flex; align-items:center; justify-content:space-between; margin-bottom: 18px; }
+    .panel-head h2 { margin: 0; font-size: 20px; letter-spacing: -.5px; }
+    .back-btn { min-height: 44px; padding: 8px 11px; border: 1px solid var(--line); border-radius: 9px; background: transparent; cursor: pointer; box-shadow: var(--button-shadow); }
+    .exercise-row { display: grid; grid-template-columns: 44px 64px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+    .exercise-photo-toggle { position: relative; width: 64px; height: 56px; padding: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 11px; background: var(--soft); cursor: pointer; box-shadow: var(--button-shadow); }
+    .exercise-photo-toggle:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 2px; }
+    .exercise-image { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .photo-frame { position: absolute; right: 4px; bottom: 4px; padding: 2px 4px; border-radius: 4px; background: rgba(25, 30, 25, .78); color: white; font-size: 9px; }
+    .photo-credit { margin: 13px 0 0; color: var(--muted); font-size: 11px; }
+    .photo-credit a { color: var(--accent-strong); }
+    .check { width: 44px; height: 44px; border: 1px solid var(--check-border); border-radius: 12px; background: transparent; color: transparent; cursor: pointer; box-shadow: var(--button-shadow); }
+    .check.done { border-color: #e1a15e; background: #e1a15e; }
+    .exercise-name { font-weight: 700; font-size: 14px; }
+    .exercise-detail { margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .exercise-tag { padding: 6px 8px; border-radius: 8px; background: var(--soft); color: var(--soft-text); font-size: 11px; }
+    .finish { width: 100%; margin-top: 15px; }
+    .progress-card { display:flex; align-items:center; gap:20px; padding:21px; border:1px solid var(--line); border-radius:17px; background:var(--card); }
+    .progress-number { font-size:31px; font-weight:800; letter-spacing:-1px; }
+    .progress-copy { color:var(--muted); font-size:13px; }
+    .hidden { display:none !important; }
+    .toast { position:fixed; right:22px; bottom:22px; padding:13px 17px; border-radius:12px; background:#222820; color:white; box-shadow:var(--shadow); animation:fade-in .2s ease-out; }
+    button:hover { filter: brightness(1.025); }
+    button:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(30, 30, 30, .2); }
+    @keyframes fade-in { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+    @media (max-width: 850px) {
+      .shell { padding: 22px 24px 38px; }
+      .layout { grid-template-columns: 1fr; gap: 20px; }
+      aside { padding: 0; }
+      .nav-label, .side-note { display:none; }
+      .nav { display:flex; gap:5px; overflow:auto; }
+      .nav button { width:auto; white-space:nowrap; padding:10px 12px; }
+      .hero { grid-template-columns: 1fr .8fr; }
+    }
+    @media (max-width: 620px) {
+      .shell { padding: max(17px, env(safe-area-inset-top)) 16px max(30px, env(safe-area-inset-bottom)); }
+      body { background-attachment: scroll; }
+      header { margin-bottom: 25px; }
+      .header-right .welcome { display:none; }
+      .header-right { gap: 8px; }
+      .brand { gap: 7px; font-size: clamp(14px, 4.5vw, 17px); }
+      .brand-mark { width: 30px; height: 30px; }
+      .theme-toggle { gap: 5px; padding: 6px 8px; font-size: 11px; }
+      .greeting { align-items:flex-start; flex-direction:column; gap:12px; }
+      .hero { grid-template-columns:1fr; }
+      .stats { grid-template-columns:1fr 1fr; grid-template-rows:auto; }
+      .stat-card { padding:14px; }
+      .stat-icon { display:none; }
+      .today-card { min-height:215px; }
+      .workouts { grid-template-columns:1fr; }
+      .workout-card { display:flex; align-items:center; justify-content:space-between; }
+      .workout-card h3 { margin-top:0; }
+      .workout-card p { margin-top:4px; }
+      .workout-top { display:none; }
+      .week { gap:5px; }
+      .day { min-height:72px; padding:10px 3px; }
+      .day-name { font-size:10px; }
+      .panel { padding:17px; }
+      .exercise-row { grid-template-columns: 44px 54px minmax(0, 1fr); gap: 9px; }
+      .exercise-photo-toggle { width:54px; height:50px; }
+      .exercise-tag { grid-column: 3; justify-self: start; margin-top:-4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand"><span class="brand-mark">↗</span> JoelmaPocahontas</div>
+      <div class="header-right"><span class="welcome">Seu espaço de treino</span><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Ativar tema escuro" aria-pressed="false"><span aria-hidden="true">☾</span><span>Tema escuro</span></button><span class="avatar">V</span></div>
+    </header>
+    <div class="layout">
+      <aside>
+        <p class="nav-label">Menu</p>
+        <nav class="nav" aria-label="Navegação principal">
+          <button class="active" data-page="inicio"><span class="nav-icon">⌂</span>Início</button>
+          <button data-page="treinos"><span class="nav-icon">▤</span>Treinos</button>
+          <button data-page="progresso"><span class="nav-icon">↗</span>Progresso</button>
+        </nav>
+        <div class="side-note"><strong>Um passo de cada vez.</strong>Consistência vale mais que intensidade. Faça o seu melhor hoje.</div>
+      </aside>
+      <main>
+        <section id="home-page">
+          <div class="greeting">
+            <div><p class="eyebrow">Olá! Que bom ter você por aqui 👋</p><h1>Vamos nos movimentar?</h1></div>
+            <div class="date-pill" id="today-date"></div>
+          </div>
+          <div class="hero">
+            <article class="today-card">
+              <span class="today-kicker">SUGESTÃO PARA HOJE</span>
+              <h2>Treino A · Peito & tríceps</h2>
+              <div class="today-meta">⏱ 45 min &nbsp;·&nbsp; 💪 5 exercícios</div>
+              <div class="today-footer"><button class="primary" data-start="Peito & tríceps">Começar treino&nbsp; →</button><span class="exercise-count">No seu ritmo, sem pressão.</span></div>
+            </article>
+            <div class="stats">
+              <article class="stat-card"><div><span class="stat-label">Treinos este mês</span><strong class="stat-value" id="month-count">0</strong></div><span class="stat-icon">🏋️</span></article>
+              <article class="stat-card"><div><span class="stat-label">Sequência atual</span><strong class="stat-value" id="streak-count">0 dias</strong></div><span class="stat-icon">🔥</span></article>
+            </div>
+          </div>
+          <div class="section-heading"><h2>Sua semana</h2><button data-page-link="progresso">Ver progresso →</button></div>
+          <div class="week" id="week"></div>
+          <div class="section-heading"><h2>Seus treinos</h2><button data-page-link="treinos">Ver todos →</button></div>
+          <div class="workouts" id="workout-cards"></div>
+        </section>
+        <section id="workout-page" class="hidden"></section>
+        <section id="all-workouts-page" class="hidden">
+          <div class="greeting"><div><p class="eyebrow">Escolha o que combina com hoje</p><h1>Seus treinos</h1></div></div>
+          <div class="workouts" id="all-workout-cards"></div>
+        </section>
+        <section id="progress-page" class="hidden">
+          <div class="greeting"><div><p class="eyebrow">Pequenos passos, grandes mudanças</p><h1>Seu progresso</h1></div></div>
+          <div class="progress-card"><div class="progress-number" id="progress-total">0</div><div><strong>treinos concluídos</strong><div class="progress-copy">Cada sessão conta. Continue construindo seu hábito!</div></div></div>
+          <div class="section-heading"><h2>Atividade recente</h2></div>
+          <div id="history"></div>
+        </section>
+      </main>
+    </div>
+    <footer class="app-credit">Imagem de fundo: <a href="https://unsplash.com" target="_blank" rel="noreferrer">Unsplash</a> · Para instalar no iPhone: Safari &gt; Compartilhar &gt; Adicionar à Tela de Início</footer>
+  </div>
+  <div id="toast" class="toast hidden" role="status"></div>
+  <script>
+    const routines = [
+      { name: "Peito & tríceps", code: "TREINO A", duration: "45 min", exercises: [
+        ["Supino reto", "3 séries · 10–12 repetições", "Peito"],
+        ["Supino inclinado com halteres", "3 séries · 10–12 repetições", "Peito"],
+        ["Crucifixo na máquina", "3 séries · 12 repetições", "Peito"],
+        ["Tríceps na polia", "3 séries · 12 repetições", "Tríceps"],
+        ["Tríceps francês", "3 séries · 10–12 repetições", "Tríceps"]
+      ]},
+      { name: "Costas & bíceps", code: "TREINO B", duration: "45 min", exercises: [
+        ["Puxada frontal", "3 séries · 10–12 repetições", "Costas"],
+        ["Remada baixa", "3 séries · 10–12 repetições", "Costas"],
+        ["Remada unilateral", "3 séries · 10 repetições", "Costas"],
+        ["Rosca direta", "3 séries · 10–12 repetições", "Bíceps"],
+        ["Rosca martelo", "3 séries · 12 repetições", "Bíceps"]
+      ]},
+      { name: "Pernas & ombros", code: "TREINO C", duration: "50 min", exercises: [
+        ["Agachamento livre", "3 séries · 8–10 repetições", "Pernas"],
+        ["Leg press", "3 séries · 10–12 repetições", "Pernas"],
+        ["Mesa flexora", "3 séries · 12 repetições", "Pernas"],
+        ["Desenvolvimento com halteres", "3 séries · 10 repetições", "Ombros"],
+        ["Elevação lateral", "3 séries · 12 repetições", "Ombros"]
+      ]},
+      { name: "Corpo todo com halteres", code: "SÓ HALTERES", duration: "40 min", exercises: [
+        ["Agachamento goblet", "3 séries · 10–12 repetições", "Pernas"],
+        ["Levantamento romeno com halteres", "3 séries · 10–12 repetições", "Posterior"],
+        ["Supino no chão com halteres", "3 séries · 10–12 repetições", "Peito"],
+        ["Remada unilateral com halter", "3 séries · 10 repetições por lado", "Costas"],
+        ["Desenvolvimento com halteres", "3 séries · 10 repetições", "Ombros"],
+        ["Rosca direta com halteres", "2 séries · 12 repetições", "Bíceps"],
+        ["Tríceps francês com halter", "2 séries · 12 repetições", "Tríceps"]
+      ]}
+    ];
+    const storageKey = "ritmo-workouts-v1";
+    const themeStorageKey = "ritmo-theme-v1";
+    let history = JSON.parse(localStorage.getItem(storageKey) || "[]");
+    let activeRoutine = null;
+    let checkedExercises = new Set();
+    const weekdays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+    const dateNow = new Date();
+    function dateKey(date) {
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    }
+    const dateLabel = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" }).format(dateNow);
+    document.getElementById("today-date").textContent = dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1);
+    const themeButton = document.getElementById("theme-toggle");
+    function applyTheme(theme) {
+      const isDark = theme === "dark";
+      document.documentElement.dataset.theme = isDark ? "dark" : "light";
+      document.querySelector('meta[name="theme-color"]').content = isDark ? "#171a17" : "#f5f4ef";
+      themeButton.innerHTML = `<span aria-hidden="true">${isDark ? "☀" : "☾"}</span><span>Tema ${isDark ? "claro" : "escuro"}</span>`;
+      themeButton.setAttribute("aria-label", `Ativar tema ${isDark ? "claro" : "escuro"}`);
+      themeButton.setAttribute("aria-pressed", String(isDark));
+    }
+    applyTheme(localStorage.getItem(themeStorageKey) === "dark" ? "dark" : "light");
+    themeButton.addEventListener("click", () => {
+      const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      localStorage.setItem(themeStorageKey, nextTheme);
+      applyTheme(nextTheme);
+    });
+
+    function renderWorkoutCards(container) {
+      container.innerHTML = routines.map((routine, index) => `
+        <article class="workout-card" data-routine="${index}" tabindex="0" role="button" aria-label="Começar ${routine.name}">
+          <div><div class="workout-top"><span class="workout-badge">${routine.code}</span><span class="workout-arrow">↗</span></div>
+          <h3>${routine.name}</h3><p>${routine.duration} &nbsp;·&nbsp; ${routine.exercises.length} exercícios</p></div><span class="workout-arrow">→</span>
+        </article>`).join("");
+      container.querySelectorAll("[data-routine]").forEach(card => {
+        const start = () => openWorkout(Number(card.dataset.routine));
+        card.addEventListener("click", start);
+        card.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); start(); } });
+      });
+    }
+    const exercisePhotoFolders = {
+      "Supino reto": "Barbell_Bench_Press_-_Medium_Grip",
+      "Supino inclinado com halteres": "Incline_Dumbbell_Press",
+      "Crucifixo na máquina": "Butterfly",
+      "Tríceps na polia": "Triceps_Pushdown",
+      "Tríceps francês": "Standing_Dumbbell_Triceps_Extension",
+      "Puxada frontal": "Wide-Grip_Lat_Pulldown",
+      "Remada baixa": "Seated_Cable_Rows",
+      "Remada unilateral": "One-Arm_Dumbbell_Row",
+      "Rosca direta": "Barbell_Curl",
+      "Rosca martelo": "Hammer_Curls",
+      "Agachamento livre": "Barbell_Full_Squat",
+      "Leg press": "Leg_Press",
+      "Mesa flexora": "Lying_Leg_Curls",
+      "Desenvolvimento com halteres": "Dumbbell_Shoulder_Press",
+      "Elevação lateral": "Side_Lateral_Raise",
+      "Agachamento goblet": "Goblet_Squat",
+      "Levantamento romeno com halteres": "Stiff-Legged_Dumbbell_Deadlift",
+      "Supino no chão com halteres": "Dumbbell_Floor_Press",
+      "Remada unilateral com halter": "One-Arm_Dumbbell_Row",
+      "Rosca direta com halteres": "Dumbbell_Bicep_Curl",
+      "Tríceps francês com halter": "Standing_Dumbbell_Triceps_Extension"
+    };
+    function exercisePhoto(name) {
+      const folder = exercisePhotoFolders[name];
+      return `<button class="exercise-photo-toggle" type="button" data-photo-folder="${folder}" data-exercise-name="${name}" data-frame="0" aria-label="Mostrar segunda posição da demonstração de ${name}"><img class="exercise-image" src="images/${folder}/0.jpg" alt="${name} — posição inicial"><span class="photo-frame" aria-hidden="true">1/2</span></button>`;
+    }
+    function renderWeek() {
+      const start = new Date(dateNow);
+      start.setDate(dateNow.getDate() - ((dateNow.getDay() + 6) % 7));
+      const todayKey = dateKey(dateNow);
+      document.getElementById("week").innerHTML = Array.from({ length: 7 }, (_, index) => {
+        const date = new Date(start); date.setDate(start.getDate() + index);
+        const key = dateKey(date);
+        const complete = history.some(item => item.date === key);
+        return `<div class="day ${key === todayKey ? "is-today" : ""} ${complete ? "has-workout" : ""}">
+          <div class="day-name">${weekdays[date.getDay()]}</div><div class="day-num">${date.getDate()}</div><div class="day-mark"></div>
+        </div>`;
+      }).join("");
+    }
+    function updateStats() {
+      const month = dateNow.getMonth(), year = dateNow.getFullYear();
+      const thisMonth = history.filter(item => { const d = new Date(item.date + "T12:00:00"); return d.getMonth() === month && d.getFullYear() === year; }).length;
+      document.getElementById("month-count").textContent = thisMonth;
+      document.getElementById("progress-total").textContent = history.length;
+      let streak = 0, date = new Date(dateNow); date.setHours(0,0,0,0);
+      const loggedToday = history.some(item => item.date === dateKey(date));
+      if (!loggedToday) date.setDate(date.getDate() - 1);
+      while (history.some(item => item.date === dateKey(date))) { streak++; date.setDate(date.getDate() - 1); }
+      document.getElementById("streak-count").textContent = `${streak} ${streak === 1 ? "dia" : "dias"}`;
+      renderWeek();
+      const historyEl = document.getElementById("history");
+      historyEl.innerHTML = history.length ? history.slice().reverse().slice(0, 10).map(item =>
+        `<article class="stat-card" style="margin-bottom:10px"><div><strong>${item.name}</strong><div class="stat-label">${new Intl.DateTimeFormat("pt-BR", { day:"numeric", month:"long" }).format(new Date(item.date + "T12:00:00"))}</div></div><span class="stat-icon">✓</span></article>`
+      ).join("") : `<div class="panel" style="color:var(--muted);font-size:13px">Seu primeiro treino concluído vai aparecer aqui. Bora começar? 💪</div>`;
+    }
+    function showPage(page) {
+      ["home-page", "workout-page", "all-workouts-page", "progress-page"].forEach(id => document.getElementById(id).classList.add("hidden"));
+      document.getElementById(({ inicio:"home-page", treino:"workout-page", treinos:"all-workouts-page", progresso:"progress-page" })[page]).classList.remove("hidden");
+      document.querySelectorAll(".nav button").forEach(button => button.classList.toggle("active", button.dataset.page === page || (page === "treino" && button.dataset.page === "treinos")));
+    }
+    function openWorkout(index) {
+      activeRoutine = routines[index]; checkedExercises = new Set();
+      const workoutPage = document.getElementById("workout-page");
+      workoutPage.innerHTML = `<div class="panel">
+        <div class="panel-head"><div><p class="eyebrow">${activeRoutine.code} · ${activeRoutine.duration}</p><h2>${activeRoutine.name}</h2></div><button class="back-btn" id="back-home">← Voltar</button></div>
+        <p class="eyebrow">Marque cada exercício quando terminar. Respeite seus limites e descanse quando precisar.</p>
+        <div id="exercise-list">${activeRoutine.exercises.map((exercise, i) => `<div class="exercise-row"><button class="check" data-check="${i}" aria-label="Marcar ${exercise[0]} como concluído">✓</button>${exercisePhoto(exercise[0])}<div><div class="exercise-name">${exercise[0]}</div><div class="exercise-detail">${exercise[1]}</div></div><span class="exercise-tag">${exercise[2]}</span></div>`).join("")}</div>
+        <p class="photo-credit">Fotos demonstrativas: <a href="https://github.com/yuhonas/free-exercise-db" target="_blank" rel="noreferrer">Free Exercise DB</a> (Unlicense). Toque na foto para ver a segunda posição.</p>
+        <button class="primary finish" id="finish-workout">Concluir treino</button>
+      </div>`;
+      workoutPage.querySelector("#back-home").addEventListener("click", () => showPage("inicio"));
+      workoutPage.querySelectorAll("[data-check]").forEach(button => button.addEventListener("click", () => {
+        const index = Number(button.dataset.check);
+        checkedExercises.has(index) ? checkedExercises.delete(index) : checkedExercises.add(index);
+        button.classList.toggle("done", checkedExercises.has(index));
+        button.setAttribute("aria-pressed", checkedExercises.has(index));
+      }));
+      workoutPage.querySelectorAll("[data-photo-folder]").forEach(button => button.addEventListener("click", () => {
+        const nextFrame = Number(button.dataset.frame) === 0 ? 1 : 0;
+        const name = button.dataset.exerciseName;
+        button.dataset.frame = String(nextFrame);
+        button.querySelector("img").src = `images/${button.dataset.photoFolder}/${nextFrame}.jpg`;
+        button.querySelector("img").alt = `${name} — posição ${nextFrame === 0 ? "inicial" : "final"}`;
+        button.querySelector(".photo-frame").textContent = `${nextFrame + 1}/2`;
+        button.setAttribute("aria-label", `Mostrar ${nextFrame === 0 ? "segunda" : "primeira"} posição da demonstração de ${name}`);
+      }));
+      workoutPage.querySelector("#finish-workout").addEventListener("click", () => finishWorkout(workoutPage.querySelector("#finish-workout")));
+      showPage("treino");
+    }
+    function finishWorkout(button) {
+      if (checkedExercises.size < activeRoutine.exercises.length) {
+        if (button.dataset.confirmPartial === "true") { saveWorkout(); return; }
+        showToast(`Faltam ${activeRoutine.exercises.length - checkedExercises.size} exercícios. Você também pode concluir assim mesmo.`);
+        button.dataset.confirmPartial = "true";
+        button.textContent = "Concluir assim mesmo";
+        return;
+      }
+      saveWorkout();
+    }
+    function saveWorkout() {
+      history.push({ name: activeRoutine.name, date: dateKey(dateNow) });
+      localStorage.setItem(storageKey, JSON.stringify(history));
+      updateStats(); showPage("inicio"); showToast("Bom treino, gata! Cada vez mais gostosa! 💪");
+    }
+    let toastTimer;
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message; toast.classList.remove("hidden");
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.add("hidden"), 3200);
+    }
+    document.querySelectorAll(".nav button").forEach(button => button.addEventListener("click", () => showPage(button.dataset.page)));
+    document.querySelectorAll("[data-page-link]").forEach(button => button.addEventListener("click", () => showPage(button.dataset.pageLink)));
+    document.querySelector("[data-start]").addEventListener("click", () => openWorkout(0));
+    renderWorkoutCards(document.getElementById("workout-cards"));
+    renderWorkoutCards(document.getElementById("all-workout-cards"));
+    updateStats();
+    if ("serviceWorker" in navigator && window.isSecureContext) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(error => {
+          console.error("Não foi possível ativar o modo offline do app.", error);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

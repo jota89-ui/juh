@@ -1,0 +1,16 @@
+JoelmaPocahontas — pacote para partilhar e instalar no iPhone
+
+Este ZIP contem a app (PWA), os icones, as imagens e o modo offline.
+Nao e um ficheiro .ipa e nao se instala diretamente a partir do WhatsApp.
+
+Para preparar a instalacao:
+1. Extraia o ZIP e publique o conteudo num alojamento web com HTTPS.
+2. Envie o endereco HTTPS da app pelo WhatsApp. Para quem vai instalar,
+   e mais simples enviar o link do que o ZIP.
+3. No iPhone, abra o link no Safari.
+4. Toque em Partilhar > Adicionar ao ecra principal > Adicionar.
+
+Depois de abrir a app online uma vez, as paginas e imagens ficam disponiveis offline.
+
+O index.html aberto diretamente a partir do ZIP nao pode ser instalado como app.
+Uma app nativa .ipa requer compilacao e assinatura com ferramentas e credenciais Apple.
